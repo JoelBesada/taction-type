@@ -4,39 +4,43 @@ setupTouchListeners = ->
   TactionType.connection.send "INPUT_DEVICE"
 
   $(document)
-    .on("touchstart", (e) ->
+    .on("touchstart touchmove touchend touchcancel touchleave", (e) ->
       e.preventDefault()
-      sendMessage
-        start: true
+      e.stopPropagation()
+    )
+    .on("touchstart", (e) ->
+      triggerEvent
+        type: "start"
         touches: formatTouches e.originalEvent.changedTouches
     )
     .on("touchmove", (e) ->
-      e.preventDefault()
-
-      # Throttle the messages for a consistent update rate
-      sendThrottledMessage
-        touches: formatTouches e.originalEvent.changedTouches
+      # Throttle the events for a consistent update rate
+      triggerThrottledEvent
+        type: "move"
+        touches: formatTouches e.originalEvent.touches
     )
     .on("touchend touchcancel touchleave", (e) ->
-      e.preventDefault()
-      sendMessage
-        end: true
+      triggerEvent
+        type: "end"
         touches: formatTouches e.originalEvent.changedTouches
     )
 
-sendMessage = (message) ->
-  TactionType.connection.send JSON.stringify(message)
+triggerEvent = (data) ->
+  TactionType.connection.send JSON.stringify(data)
+  TactionType.$.trigger "touch#{data.type}", data
 
-sendThrottledMessage = _.throttle(sendMessage, 10)
+triggerThrottledEvent = _.throttle(triggerEvent, 10)
 
 # Pick out the info we are interested in from the list of touches
 formatTouches = (touches) -> {
   id: touch.identifier
-  x: touch.screenX / document.width
-  y: touch.screenY / document.height
+  x: touch.pageX / document.width
+  y: touch.pageY / document.height
 } for touch in touches
 
 TactionType.input = {
   init: ->
+    $("body").addClass "input"
+    TactionType.inputDevice = true
     TactionType.connection.onopen = setupTouchListeners
 }
