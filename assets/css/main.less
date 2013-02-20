@@ -31,14 +31,24 @@ body {
 
 .touch-point {
   .centered-circle(25px);
-
-  background-color: rgba(50,50,50,0.1);
+  z-index: 10;
+  background-color: rgba(50,50,50,0.3);
 }
 
 .touch-key {
   box-sizing: border-box;
   .centered-circle(100px);
-  border: 10px solid red;
+  -webkit-transition-property: background-color, color;
+  -webkit-transition-duration: 0.5s;
+  border: 10px solid;
+  color: #999;
+
+  &[data-id] { color: transparent;}
+  &[data-id="1"] { background-color: red; }
+  &[data-id="2"] { background-color: green; }
+  &[data-id="3"] { background-color: blue; }
+  &[data-id="4"] { background-color: orange; }
+  &[data-id="5"] { background-color: cyan; }
 
   .input & {
     .centered-circle(75px);

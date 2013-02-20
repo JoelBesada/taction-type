@@ -36,6 +36,7 @@ formatTouches = (touches) -> {
   id: touch.identifier
   x: touch.pageX / document.width
   y: touch.pageY / document.height
+  key: $(touch.target).data("id")
 } for touch in touches
 
 TactionType.input = {
