@@ -54,8 +54,9 @@ class TactionType.TouchKey
   # Keypresses withing small intervals of each other
   # are grouped together as one chord
   _pressKeys = _.debounce(->
-    console.log _.keys(_presses)
+    char = TactionType.KeyDefinitions.presses[_.keys(_presses).join("-")]
     _presses = {}
+    $(".text-area").append(char.toLowerCase()) if char
   , KEY_GROUPING_INTERVAL)
   pressKeys = (touches) ->
     for id, touch of touches
