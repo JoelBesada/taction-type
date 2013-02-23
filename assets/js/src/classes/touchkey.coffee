@@ -65,7 +65,13 @@ class TactionType.TouchKey
           $(element).removeClass("pressed")
 
     char = TactionType.KeyDefinitions.presses[keys.join("-")]
-    $(".text-area").append(char.toLowerCase()) if char
+    return unless char
+    if char is "BACKSPACE"
+      $(".text-area").text(
+        $(".text-area").text().substring(0, $(".text-area").text().length - 1)
+      )
+    else
+      $(".text-area").append(char.toLowerCase()) if char
 
   , KEY_GROUPING_INTERVAL)
 

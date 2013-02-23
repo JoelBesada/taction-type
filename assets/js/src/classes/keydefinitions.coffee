@@ -7,4 +7,5 @@ class TactionType.KeyDefinitions
     "5": "O"
     "1-2": "S"
     "2-3": "R"
+    "1-2-3-4": "BACKSPACE"
     "1-2-3-4-5": " "
