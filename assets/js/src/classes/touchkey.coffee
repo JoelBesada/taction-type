@@ -58,11 +58,15 @@ class TactionType.TouchKey
   _pressKeys = _.debounce( =>
     keys = _.keys(_presses).sort()
     _presses = {}
+    $key(key).addClass "pressed" for key in keys
+    _.defer =>
+      $(".pressed").each (index, element) =>
+        unless _.findWhere(@touches, key: $(element).data("id"))
+          $(element).removeClass("pressed")
 
     char = TactionType.KeyDefinitions.presses[keys.join("-")]
     $(".text-area").append(char.toLowerCase()) if char
 
-    $key(key).addClass "pressed" for key in keys
   , KEY_GROUPING_INTERVAL)
 
   pressKeys = (touches) ->
