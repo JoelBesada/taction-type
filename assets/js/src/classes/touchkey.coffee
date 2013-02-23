@@ -29,7 +29,10 @@ class TactionType.TouchKey
         startCalibration() if _.keys(@touches).length is 5
       )
       .on("touchend", (e, data) =>
-        delete @touches[touch.id] for touch in data.touches
+        for touch in data.touches
+          key = @touches[touch.id].key
+          $key(key).removeClass("pressed") if key
+          delete @touches[touch.id]
         endCalibration() if @calibrating
       )
       .on("touchmove", (e, data) =>
@@ -48,17 +51,23 @@ class TactionType.TouchKey
     touchKeyList = _.sortBy((touch for id, touch of @touchKeys), "x")
     $el.attr("data-id", i + 1) for {$el}, i in touchKeyList
 
-
   _presses = {}
 
-  # Keypresses withing small intervals of each other
+  # Keypresses within small intervals of each other
   # are grouped together as one chord
-  _pressKeys = _.debounce(->
-    char = TactionType.KeyDefinitions.presses[_.keys(_presses).sort().join("-")]
+  _pressKeys = _.debounce( =>
+    keys = _.keys(_presses).sort()
     _presses = {}
+
+    char = TactionType.KeyDefinitions.presses[keys.join("-")]
     $(".text-area").append(char.toLowerCase()) if char
+
+    $key(key).addClass "pressed" for key in keys
   , KEY_GROUPING_INTERVAL)
+
   pressKeys = (touches) ->
     for id, touch of touches
       _presses[touch.key] = true if touch.key
     _pressKeys()
+
+  $key = (key) -> $(".touch-key[data-id=\"#{key}\"]")

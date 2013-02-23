@@ -28,7 +28,7 @@ body {
   -webkit-transition: opacity 0.25s;
 
   &.show {
-    opacity: 1;
+    opacity: 0.5;
   }
 }
 
@@ -43,23 +43,28 @@ body {
 .touch-point {
   .centered-circle(25px);
   z-index: 10;
-  background-color: rgba(50,50,50,0.3);
+  background-color: #505050;
 }
 
 .touch-key {
   box-sizing: border-box;
   .centered-circle(100px);
-  -webkit-transition-property: background-color, color;
+  -webkit-transition-property: background-color, color, opacity;
   -webkit-transition-duration: 0.5s;
   border: 10px solid;
   color: #999;
 
   &[data-id] { color: transparent;}
-  &[data-id="1"] { background-color: fade(red, 30%); }
-  &[data-id="2"] { background-color: fade(green, 30%); }
-  &[data-id="3"] { background-color: fade(blue, 30%); }
-  &[data-id="4"] { background-color: fade(orange, 30%); }
-  &[data-id="5"] { background-color: fade(purple, 30%); }
+  &[data-id="1"] { background-color: red }
+  &[data-id="2"] { background-color: green }
+  &[data-id="3"] { background-color: blue }
+  &[data-id="4"] { background-color: orange }
+  &[data-id="5"] { background-color: purple }
+
+  &.pressed {
+    -webkit-transition-duration: 0s;
+    opacity: 1;
+  }
 
   .input & {
     .centered-circle(75px);
