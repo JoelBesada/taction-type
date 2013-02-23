@@ -1,5 +1,5 @@
 class TactionType.TouchKey
-  KEY_GROUPING_INTERVAL = 20
+  KEY_GROUPING_INTERVAL = 30
 
   constructor: (@id, @x, @y) ->
     @$el = $("<div>").addClass("touch-key")
