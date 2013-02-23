@@ -23,7 +23,7 @@ class TactionType.TouchPoint
 
   @touchPoints = {}
   @touchCount = -> _.keys(@touchPoints).length
-  @init: ->
+  @init: =>
     return if TactionType.inputDevice
 
     TactionType.$
@@ -41,3 +41,5 @@ class TactionType.TouchPoint
           @touchPoints[touch.id]?.move touch.x, touch.y
       )
 
+$ ->
+  TactionType.$.on "ready", TactionType.TouchPoint.init

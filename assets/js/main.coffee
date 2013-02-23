@@ -1,17 +1,23 @@
 #= require_tree lib
 #= require_tree src
 
+_.defaults TactionType,
+  $: $ TactionType
+  inputDevice: "ontouchstart" of window and window.location.hash is "#input"
+
+  triggerSyncedEvent: (event, data) ->
+    @connection.send JSON.stringify
+      event: event
+      data: data
+    TactionType.$.trigger event, data
+
 $ ->
   TactionType.connection =
     new WebSocket("ws://#{window.location.hostname}:#{TactionType.SOCKET_PORT}")
 
-  TactionType.$ = $ TactionType
+  TactionType.connection.addEventListener "message", (e) ->
+    message = JSON.parse e.data
+    TactionType.$.trigger(message.event, message.data)
 
-  if 'ontouchstart' of window && window.location.hash is "#input"
-    TactionType.input.init() # Input device
-  else
-    TactionType.app.init() # Computer
-
-  TactionType.TouchPoint.init()
-  TactionType.TouchKey.init()
+  TactionType.$.trigger "ready"
 

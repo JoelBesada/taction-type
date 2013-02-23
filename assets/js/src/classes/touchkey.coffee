@@ -20,7 +20,7 @@ class TactionType.TouchKey
   @touches: {}
   @touchKeys: {}
   @lastTime: 0
-  @init: ->
+  @init: =>
     TactionType.$
       .on("touchstart", (e, data) =>
         @touches[touch.id] = touch for touch in data.touches
@@ -81,3 +81,6 @@ class TactionType.TouchKey
     _pressKeys()
 
   $key = (key) -> $(".touch-key[data-id=\"#{key}\"]")
+
+$ ->
+  TactionType.$.on "ready", TactionType.TouchKey.init
