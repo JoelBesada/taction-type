@@ -25,6 +25,11 @@ setupConnection = (connection) ->
     if message.utf8Data is "INPUT_DEVICE" and inputDeviceID is null
       console.log "New input device set: #{ID}"
       inputDeviceID = ID
+      # Trigger a a newinput event on all other connections
+      for clientID, client of clients
+        continue if clientID is ID
+        client.connection.sendUTF JSON.stringify(event: "newinput")
+
       return
 
     return unless ID is inputDeviceID
