@@ -23,8 +23,8 @@ class TactionType.TouchKey
   @init: =>
     TactionType.$
       .on("touchstart", (e, data) =>
-        @touches[touch.id] = touch for touch in data.touches
         pressKeys data.touches
+        @touches[touch.id] = touch for touch in data.touches
         return if @calibrated or @calibrating
         startCalibration() if _.keys(@touches).length is 5
       )
@@ -64,14 +64,8 @@ class TactionType.TouchKey
         unless _.findWhere(@touches, key: $(element).data("id"))
           $(element).removeClass("pressed")
 
-    char = TactionType.KeyDefinitions.presses[keys.join("-")]
-    return unless char
-    if char is "BACKSPACE"
-      $(".text-area").text(
-        $(".text-area").text().substring(0, $(".text-area").text().length - 1)
-      )
-    else
-      $(".text-area").append(char.toLowerCase()) if char
+    if TactionType.inputDevice
+      TactionType.triggerSyncedEvent "keypressed", keys: keys
 
   , KEY_GROUPING_INTERVAL)
 
