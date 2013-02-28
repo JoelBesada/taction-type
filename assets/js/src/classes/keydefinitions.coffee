@@ -14,5 +14,5 @@ class TactionType.KeyDefinitions
     "3-5": "C"
     "1-4": "U"
     "2-5": "M"
-    "1-2-3-4": "BACKSPACE"
+    "1-2-3": "BACKSPACE"
     "1-2-3-4-5": " "
