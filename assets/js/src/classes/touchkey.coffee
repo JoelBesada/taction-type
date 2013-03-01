@@ -49,7 +49,7 @@ class TactionType.TouchKey
     @calibrating = false
     @calibrated = true
     touchKeyList = _.sortBy((touch for id, touch of @touchKeys), "x")
-    $el.attr("data-id", i + 1) for {$el}, i in touchKeyList
+    touchKey.$el.attr("data-id", touchKey.key = i + 1) for touchKey, i in touchKeyList
 
   _presses = {}
 

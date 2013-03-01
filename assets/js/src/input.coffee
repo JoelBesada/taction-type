@@ -28,10 +28,28 @@ triggerThrottledEvent = _.throttle(triggerEvent, 10)
 # Pick out the info we are interested in from the list of touches
 formatTouches = (touches) -> {
   id: touch.identifier
-  x: touch.pageX / document.width
-  y: touch.pageY / document.height
-  key: $(touch.target).data("id")
+  x: getX touch
+  y: getY touch
+  key: determineKey touch
 } for touch in touches
+
+getX = (touch) -> touch.pageX / document.width
+getY = (touch) -> touch.pageY / document.height
+
+# Return the closest key for the given touch
+determineKey = (touch) ->
+  return null unless TactionType.TouchKey.calibrated
+  id = $(touch.target).data("id")
+  return id if id
+  x = getX touch
+  y = getY touch
+
+  # Not actual distances, but good enough for finding the closest key
+  distances = _.map TactionType.TouchKey.touchKeys, (touchKey) ->
+    key: touchKey.key
+    distance: Math.abs(touchKey.x - x) + Math.abs(touchKey.y - y)
+
+  _.min(distances, (item) -> item.distance).key
 
 $ ->
   return unless TactionType.inputDevice
