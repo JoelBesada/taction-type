@@ -19,7 +19,10 @@ class TactionType.TouchKey
   @calibrating: false
   @touches: {}
   @touchKeys: {}
-  @lastTime: 0
+  @unpressedTouchKeys: -> _.filter @touchKeys, (touchKey) ->
+    not _presses[touchKey.key]
+  @isPressed: (key) -> _presses[key]
+
   @init: =>
     TactionType.$
       .on("touchstart", (e, data) =>
