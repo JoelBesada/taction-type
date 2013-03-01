@@ -1,6 +1,10 @@
 class TactionType.TouchKey
   KEY_GROUPING_INTERVAL = 60
+  CALIBRATION_TRIGGER_TIME = 1000
+
   $charBox = null
+  calibrationTimeout = null
+  previousTouchKeys = null
 
   constructor: (@id, @x, @y) ->
     @$el = $("<div>").addClass("touch-key")
@@ -16,6 +20,9 @@ class TactionType.TouchKey
                            translateY(#{y * document.height}px)
                            translateZ(0)"
 
+  remove: ->
+    setTimeout @$el.remove, 500
+
   @calibrated: false
   @calibrating: false
   @touches: {}
@@ -30,14 +37,20 @@ class TactionType.TouchKey
       .on("touchstart", (e, data) =>
         pressKeys data.touches
         @touches[touch.id] = touch for touch in data.touches
-        return if @calibrated or @calibrating
-        startCalibration() if _.keys(@touches).length is 5
+
+        if _.keys(@touches).length is 5
+          if @calibrated or @calibrating
+            calibrationTimeout = setTimeout startCalibration, CALIBRATION_TRIGGER_TIME
+          else
+            startCalibration() if _.keys(@touches).length is 5
       )
       .on("touchend", (e, data) =>
         for touch in data.touches
           key = @touches[touch.id].key
           $key(key).removeClass("pressed") if key
           delete @touches[touch.id]
+
+        clearTimeout calibrationTimeout
         endCalibration() if @calibrating
       )
       .on("touchmove", (e, data) =>
@@ -48,13 +61,21 @@ class TactionType.TouchKey
       .on("keypressed", hideCharacter)
 
   startCalibration = =>
+    # Remove the unintented space that was added on re-calibration
+    TactionType.KeyHandler.backspace()
+
     @calibrating = true
+    previousTouchKeys = @touchKeys
+    touchKey.$el.hide() for id, touchKey of previousTouchKeys
+
+    @touchKeys = {}
     for id, touch of @touches
       @touchKeys[id] = new @(id, touch.x, touch.y)
 
   endCalibration = =>
     @calibrating = false
     @calibrated = true
+    touchKey.remove() for id, touchKey of previousTouchKeys
     touchKeyList = _.sortBy((touch for id, touch of @touchKeys), "x")
     touchKey.$el.attr("data-id", touchKey.key = i + 1) for touchKey, i in touchKeyList
 

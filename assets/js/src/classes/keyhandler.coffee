@@ -1,14 +1,15 @@
 class TactionType.KeyHandler
   $textArea = null
-  handleKeyPress = (e, data) ->
+  handleKeyPress = (e, data) =>
     char = TactionType.KeyDefinitions.presses[data.keys.join("-")]
     return unless char
     if char is "BACKSPACE"
-      $textArea.text(
-        $textArea.text().substring(0, $textArea.text().length - 1)
-      )
+     @backspace()
     else
       $textArea.append(char.toLowerCase()) if char
+
+  @backspace = ->
+   $textArea.text $textArea.text().substring(0, $textArea.text().length - 1)
 
   @init = ->
     TactionType.$.on "keypressed", handleKeyPress
