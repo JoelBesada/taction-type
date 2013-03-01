@@ -1,5 +1,6 @@
 class TactionType.TouchKey
   KEY_GROUPING_INTERVAL = 60
+  $charBox = null
 
   constructor: (@id, @x, @y) ->
     @$el = $("<div>").addClass("touch-key")
@@ -24,6 +25,7 @@ class TactionType.TouchKey
   @isPressed: (key) -> _presses[key]
 
   @init: =>
+    $charBox = $ ".char-box"
     TactionType.$
       .on("touchstart", (e, data) =>
         pressKeys data.touches
@@ -42,6 +44,8 @@ class TactionType.TouchKey
         return unless @calibrating
         @touchKeys[touch.id]?.move touch.x, touch.y for touch in data.touches
       )
+      .on("charpress", showCharacter)
+      .on("keypressed", hideCharacter)
 
   startCalibration = =>
     @calibrating = true
@@ -78,6 +82,21 @@ class TactionType.TouchKey
     _pressKeys()
 
   $key = (key) -> $(".touch-key[data-id=\"#{key}\"]")
+
+  showCharacter = (e, data) ->
+    char = String.fromCharCode(data.keyCode).toUpperCase()
+    keys = TactionType.KeyDefinitions.lookup[char]
+    return unless keys
+    hideCharacter()
+
+    for key in keys.split("-")
+      $key(key).addClass "highlight"
+
+    $charBox.text(char).addClass("show")
+
+  hideCharacter = ->
+    $(".touch-key.highlight").removeClass("highlight")
+    $charBox.removeClass("show")
 
 $ ->
   TactionType.$.on "ready", TactionType.TouchKey.init

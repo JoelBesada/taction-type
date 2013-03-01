@@ -32,7 +32,6 @@ setupConnection = (connection) ->
 
       return
 
-    return unless ID is inputDeviceID
     # Forward all messages to other clients
     for clientID, client of clients
       client.connection.sendUTF(message.utf8Data) unless clientID is ID

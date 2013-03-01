@@ -18,3 +18,7 @@ class TactionType.KeyDefinitions
 
     "1-2-3": "BACKSPACE"
     "1-2-3-4-5": " "
+
+  @lookup: _.invert @presses
+
+
