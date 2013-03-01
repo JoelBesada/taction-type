@@ -68,7 +68,7 @@ class TactionType.TouchKey
           $(element).removeClass("pressed")
 
     if TactionType.inputDevice
-      TactionType.triggerSyncedEvent "keypressed", keys: keys
+      TactionType.triggerSynced "keypressed", keys: keys
 
   , KEY_GROUPING_INTERVAL)
 

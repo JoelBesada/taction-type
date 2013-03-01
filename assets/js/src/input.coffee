@@ -22,7 +22,7 @@ setupTouchListeners = ->
     )
 
 triggerEvent = (event, data) ->
-  TactionType.triggerSyncedEvent event, data
+  TactionType.triggerSynced event, data
 triggerThrottledEvent = _.throttle(triggerEvent, 10)
 
 # Pick out the info we are interested in from the list of touches

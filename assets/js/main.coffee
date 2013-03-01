@@ -5,7 +5,7 @@ _.defaults TactionType,
   $: $ TactionType
   inputDevice: "ontouchstart" of window and window.location.hash is "#input"
 
-  triggerSyncedEvent: (event, data) ->
+  triggerSynced: (event, data) ->
     @connection.send JSON.stringify
       event: event
       data: data
