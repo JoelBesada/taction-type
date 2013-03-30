@@ -1,3 +1,11 @@
+# Definitions of all keys.
+# Fingers:
+#   1: Thumb
+#   2: Index finger
+#   3: Middle finger
+#   4: Ring finger
+#   5: Pinky
+
 class TactionType.KeyDefinitions
   @presses:
     "1": "A"

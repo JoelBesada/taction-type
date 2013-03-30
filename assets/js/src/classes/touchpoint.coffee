@@ -20,10 +20,12 @@ class TactionType.TouchPoint
       @$el.remove()
     , 250)
 
-
   @touchPoints = {}
   @touchCount = -> _.keys(@touchPoints).length
+
   @init: =>
+    # Touch points are only rendered on "audience" devices, i.e.
+    # not the touch device itself
     return if TactionType.inputDevice
 
     TactionType.$

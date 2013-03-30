@@ -1,5 +1,10 @@
+# The touchkeys visible on the input device
 class TactionType.TouchKey
+  # The interval time in ms for grouping touches together as chords
   KEY_GROUPING_INTERVAL = 60
+
+  # The time in ms that the user should hold down all five
+  # fingers on the screen before keys are recalibrated
   CALIBRATION_TRIGGER_TIME = 1000
 
   $charBox = null
@@ -27,9 +32,11 @@ class TactionType.TouchKey
   @calibrating: false
   @touches: {}
   @touchKeys: {}
+  @isPressed: (key) -> _presses[key]
+
+  # Get all keys that are not currently pressed
   @unpressedTouchKeys: -> _.filter @touchKeys, (touchKey) ->
     not _presses[touchKey.key]
-  @isPressed: (key) -> _presses[key]
 
   @init: =>
     $charBox = $ ".char-box"
@@ -60,6 +67,7 @@ class TactionType.TouchKey
       .on("charpress", showCharacter)
       .on("keypressed", hideCharacter)
 
+  # Calibrate/place out the touch keys
   startCalibration = =>
     # Remove the unintented space that was added on re-calibration
     TactionType.KeyHandler.backspace()
@@ -72,6 +80,8 @@ class TactionType.TouchKey
     for id, touch of @touches
       @touchKeys[id] = new @(id, touch.x, touch.y)
 
+  # Lay down the keys and give them identifiers based on their positions
+  # from left to right
   endCalibration = =>
     @calibrating = false
     @calibrated = true
@@ -102,8 +112,10 @@ class TactionType.TouchKey
       _presses[touch.key] = true if touch.key
     _pressKeys()
 
+  # Retrieve the jQuery element for a given key
   $key = (key) -> $(".touch-key[data-id=\"#{key}\"]")
 
+  # Show the guide highlight for a key pressed on a remote keyboard
   showCharacter = (e, data) ->
     char = String.fromCharCode(data.keyCode).toUpperCase()
     keys = TactionType.KeyDefinitions.lookup[char]
@@ -115,6 +127,7 @@ class TactionType.TouchKey
 
     $charBox.text(char).addClass("show")
 
+  # Hide the character highlight
   hideCharacter = ->
     $(".touch-key.highlight").removeClass("highlight")
     $charBox.removeClass("show")

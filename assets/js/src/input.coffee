@@ -2,28 +2,31 @@
 setupTouchListeners = ->
   # Register with the server as an input device
   TactionType.connection.send "INPUT_DEVICE"
+
   $(document)
     .on("touchstart touchmove touchend touchcancel touchleave", (e) ->
       e.preventDefault()
       e.stopPropagation()
     )
     .on("touchstart", (e) ->
-      triggerEvent "touchstart",
+      trigger "touchstart",
         touches: formatTouches e.originalEvent.changedTouches
     )
     .on("touchmove", (e) ->
       # Throttle the events for a consistent update rate
-      triggerThrottledEvent "touchmove"
+      triggerThrottled "touchmove"
         touches: formatTouches(e.originalEvent.touches, true)
     )
     .on("touchend touchcancel touchleave", (e) ->
-      triggerEvent "touchend"
+      trigger "touchend"
         touches: formatTouches e.originalEvent.changedTouches
     )
 
-triggerEvent = (event, data) ->
-  TactionType.triggerSynced event, data
-triggerThrottledEvent = _.throttle(triggerEvent, 10)
+# Local shorthand for triggering a synced event
+trigger = -> TactionType.triggerSynced.apply(TactionType, arguments)
+
+# A throttled version of trigger
+triggerThrottled = _.throttle(trigger, 10)
 
 # Pick out the info we are interested in from the list of touches
 formatTouches = (touches, move) ->
@@ -63,8 +66,9 @@ determineKey = (touch, pressedNow) ->
   _.min(distances, (item) -> item.distance)?.key
 
 $ ->
+  # This code should only run on the input device
   return unless TactionType.inputDevice
+
   TactionType.$.on "ready", ->
     $("body").addClass "input"
-    TactionType.inputDevice = true
     TactionType.connection.onopen = setupTouchListeners

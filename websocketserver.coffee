@@ -1,5 +1,13 @@
 ###
 # WebSocket Server Setup
+# WebSockets are used within the application to communicate with
+# other connected devices. Only one input device can be active
+# at a time, all other devices act as "audience" devices.
+#
+# Communication between devices is handled by sending a JSON
+# object with an event and data field. These events will then
+# be triggered on all receiving applications, like any other
+# JavaScript event.
 ###
 _ = require "underscore"
 WebSocketServer = require("websocket").server
@@ -15,6 +23,7 @@ exports.init = (webServer) ->
       setupConnection req.accept(null, req.origin)
 
 setupConnection = (connection) ->
+  # Give a unique ID to every connected device
   ID = _.uniqueId()
 
   clients[ID] =
@@ -25,6 +34,7 @@ setupConnection = (connection) ->
     if message.utf8Data is "INPUT_DEVICE" and inputDeviceID is null
       console.log "New input device set: #{ID}"
       inputDeviceID = ID
+
       # Trigger a a newinput event on all other connections
       for clientID, client of clients
         continue if clientID is ID
