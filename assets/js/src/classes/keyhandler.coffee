@@ -6,7 +6,7 @@ class TactionType.KeyHandler
     if char is "BACKSPACE"
      @backspace()
     else
-      $textArea.append(char.toLowerCase()) if char
+      $textArea.append(char) if char
 
   @backspace = ->
    $textArea.text $textArea.text().substring(0, $textArea.text().length - 1)
