@@ -14,11 +14,11 @@ setupTouchListeners = ->
     )
     .on("touchmove", (e) ->
       # Throttle the events for a consistent update rate
-      triggerThrottled "touchmove"
+      triggerThrottled "touchmove",
         touches: formatTouches(e.originalEvent.touches, true)
     )
     .on("touchend touchcancel touchleave", (e) ->
-      trigger "touchend"
+      trigger "touchend",
         touches: formatTouches e.originalEvent.changedTouches
     )
 
